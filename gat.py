@@ -11,19 +11,23 @@ DB_PATH = "tutorial.db"
 aaa = GatSQL(DB_PATH)
 
 data = [
-    [33, 53, 62, 64, 20, 98, 28, 89, 57, 88],
-    [7, 45, 13, 30, 43, 93, 3, 58, 1, 68],
-    [82, 77, 69, 32, 10, 17, 73, 18, 25, 94],
-    [11, 21, 54, 60, 23, 65, 71, 50, 38, 56],
-    [36, 87, 42, 75, 52, 12, 24, 41, 4, 84],
-    [59, 8, 78, 95, 31, 19, 14, 39, 99, 5],
-    [46, 66, 67, 85, 15, 2, 92, 16, 91, 70],
-    [61, 35, 74, 81, 27, 9, 96, 29, 26, 40],
-    [76, 6, 97, 34, 79, 55, 22, 47, 48, 90],
-    [49, 37, 51, 63, 72, 44, 80, 86, 83, 87],
+    ['LN05LPE_CalibreDRC_A00_V1.0.1.0_DRC', 'selfksdflkji39sdfoiksjdfl', 'CalibredDRC', 'samsung', 'LN05LPE', 'automotive'],
+    ['LN08LPP_CalibrePERC_S00_V1.0.1.0_PERC', 'selskdfjvsdlkcjvisdof', 'CalibrePERC', 'samsung', 'LN08LPP', 'consumer'],
+    ['LN08LPP_CalibreLFD_S00_V1.0.1.0_LFD', 'awefawefwewfaefw', 'CalibreLFD', 'samsung', 'LN08LPP', 'consumer'],
+    ['LN08LPP_CalibreVRC_S00_V1.0.1.0_VRC', 'awgheragerfgrefdg', 'CalibreVRC', 'samsung', 'LN08LPP', 'consumer'],
+    ['LN08LPP_CalibreFLT_S00_V1.0.1.0_FLT', 'sergedgrrdrgegdfg', 'CalibreFLT', 'samsung', 'LN08LPP', 'consumer'],
+    ['LN08LPP_CalibreLVS_S00_V1.0.1.0_LVS', 'dfwfsfeafsdfkjshdfk', 'CalibreLVS', 'samsung', 'LN08LPP', 'consumer'],
+    ['LN08LPP_CalibreSmartFill_S00_V1.0.1.0_SmartFill', 'zsdfergfdghfghfhr', 'CalibreSmartFill', 'samsung', 'LN08LPP', 'consumer']
 ]
 
-GatSQL.print_table(data, True)
+
+for d in data:
+    aaa.add_new_row( 'gat_pdk', *d)
+
+
+aaa.show_current_table('gat_pdk')
+
+#GatSQL.print_table(data, True)
 
 #aaa.create_new_table(SAMSUNG_PDK)
 #aaa.add_new_row('gat_pdk', **{'product_name' : 'LN08LPP_CalibreDRC_S00_V1.0.1.0_DRC',

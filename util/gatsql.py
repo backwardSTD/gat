@@ -2,6 +2,7 @@ import os,sys,platform
 import sqlite3
 import shlex
 import db.gatcolumn as gatcolumn
+from typing import Any
 
 __all__ = ['GatSQL']
 
@@ -39,8 +40,7 @@ class GatSQL:
         
 
     def _check_dub_col(self, table, col, row):
-        ...
-    #    self.con.execute("SELECT
+        cur = self.con.execute("SELECT ")
 
     
     def create_new_table(self, column_template: str):
@@ -56,35 +56,67 @@ class GatSQL:
             print(e)
             
 
-    def add_new_row(self, table ,**add_kwargs):
-        if ( self._db_check_new(table) ):
-            cur = self.con.cursor()
-            cur.execute("""SELECT * FROM pragma_table_info('{}')""".format(table))
-            col = cur.fetchall()
-            column_list = []
+    def add_new_row(self, table , *args: Any, **kwargs: Any ):
+        cur = self.con.cursor()
 
-            for _ in col:
-                column_list.append(_[1])
-            print(column_list)
+        # Extract list of column name
+        cur.execute("""SELECT * FROM pragma_table_info('{}')""".format(table))  
+        col = cur.fetchall()
+        column_list = []
 
-            _i_items = []
-            _i_values = []
-            for item, value in add_kwargs.items():
-                _i_items.append("'"+item+"'")
+        for _ in col:
+            column_list.append(_[1])
+        print(column_list)
 
-                if type(value).__name__ != str:
-                    _i_values.append("'"+value+"'")
-                else:
-                   _i_values.append(value)
-            try:
-                cur = cur.execute("""INSERT INTO {}({}) VALUES({})"""
-                                    .format(table, ','.join(_i_items), ','.join(_i_values)))
-                self.con.commit
-            except sqlite3.IntegrityError as e:
-                print(e)
-        else:
-            print("Can not find table name to add row : {}".format(table))
-            return 1
+        # Unpack args or kwargs, and insert rows into table.
+        if args and kwargs:
+            raise ValueError("User either *args or **kwrgs, not both.")
         
-    def find_row_from_column(self, table, **add_kwargs):
-        ... 
+        # Case of kwargs (dictionary)
+        elif kwargs:
+            if ( self._db_check_new(table) ):
+
+
+                _i_items = []
+                _i_values = []
+                for item, value in kwargs.items():
+                    _i_items.append("'"+item+"'")
+
+                    if type(value).__name__ != str:
+                        _i_values.append("'"+value+"'")
+                    else:
+                        _i_values.append(value)
+                try:
+                    cur = cur.execute("""INSERT INTO {}({}) VALUES({})"""
+                                        .format(table, ','.join(_i_items), ','.join(_i_values)))
+                    self.con.commit
+                except sqlite3.IntegrityError as e:
+                    print(e)
+            else:
+                print("Can not find table name to add row : {}".format(table))
+                return 1
+            
+        # Case of args (list)
+        elif args:
+            if ( self._db_check_new(table) ):
+                _i_values = []
+                for value in args:
+                    if type(value).__name__ != str:
+                        _i_values.append("'"+value+"'")
+                    else:
+                        _i_values.append(value)
+                try:
+                    cur = cur.execute("""INSERT INTO {} VALUES({})"""
+                                      .format(table, ','.join(_i_values)))
+                    self.con.commit
+                except sqlite3.IntegrityError as e:
+                    print(e)
+            else:
+                print("Can not find table name to add row : {}".format(table))
+                return 1
+                
+        
+    def show_current_table(self, table):
+        cur = self.con.execute(" SELECT * FROM ?", table)
+        result = cur.fetchall
+        print(result)
