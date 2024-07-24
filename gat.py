@@ -22,7 +22,7 @@ data = [
 
 
 for d in data:
-    aaa.add_new_row( 'gat_pdk', *d)
+    aaa.add_row( 'gat_pdk', *d)
 
 
 aaa.show_current_table('gat_pdk')
