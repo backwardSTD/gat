@@ -3,6 +3,7 @@ import argparse
 import sqlite3
 from util.gatsql import *
 from db.gatcolumn import *
+from util.table import *
 
 
 DB_PATH = "tutorial.db"
@@ -20,19 +21,7 @@ data = [
     ['LN08LPP_CalibreSmartFill_S00_V1.0.1.0_SmartFill', 'zsdfergfdghfghfhr', 'CalibreSmartFill', 'samsung', 'LN08LPP', 'consumer']
 ]
 
-
-for d in data:
-    aaa.add_row( 'gat_pdk', *d)
-
-
-aaa.show_current_table('gat_pdk')
-
-#GatSQL.print_table(data, True)
-
-#aaa.create_new_table(SAMSUNG_PDK)
-#aaa.add_new_row('gat_pdk', **{'product_name' : 'LN08LPP_CalibreDRC_S00_V1.0.1.0_DRC',
-#                              'hash' : '234lknsdf9swlsksd',
-#                              'product_type': 'CalibreDRC',
-#                              'foundry': 'samsung',
-#                              'process': '111',
-#                              'architecture': 'consumer'})
+test = Table(DB_PATH)
+test.savedb()
+test.createTable('gat_pdk', SAMSUNG_PDK)
+test.dropTable('gat_pdk')
